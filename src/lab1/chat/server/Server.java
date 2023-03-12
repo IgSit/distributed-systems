@@ -95,9 +95,10 @@ public class Server extends Thread {
                     Message message = new Message(clientPort, reader.readLine());
                     sendTcpMessage(message);
                 } catch (IOException e) {
-                    System.out.println("Error while reading data.");
+                    System.out.println("Error while reading data. Closing connection.");
                     removeTcpConnection(clientPort);
                     this.interrupt();
+                    break;
                 }
             }
         });
@@ -105,8 +106,6 @@ public class Server extends Thread {
     }
 
     private synchronized void removeTcpConnection(int clientPort) {
-        PrintWriter writer = connectionsMap.get(clientPort);
-        writer.close();
         connectionsMap.remove(clientPort);
     }
 
